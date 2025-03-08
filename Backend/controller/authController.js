@@ -11,45 +11,50 @@ const signUp = async (req, res) => {
     }
 
     const existingUser = await User.findOne({ username });
-    if(existingUser){
-        return res.status(400).json({error: "Username is already taken"});
+    if (existingUser) {
+      return res.status(400).json({ error: "Username is already taken" });
     }
 
     const existingEmail = await User.findOne({ email });
-    if(existingEmail){
-        return res.status(400).json({error: "Email is already taken"});
+    if (existingEmail) {
+      return res.status(400).json({ error: "Email is already taken" });
     }
 
-    // hash password 
+    if (password.length < 6) {
+        return res
+          .status(400)
+          .json({ error: "Password must be at least six characters long" });
+      }
+
+    // hash password
     const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt)
+    const hash = await bcrypt.hash(password, salt);
 
     const newUser = new User({
-        fullName,
-        username, 
-        email,
-        password: hash
-    })
+      fullName,
+      username,
+      email,
+      password: hash,
+    });
 
-    if(newUser){
-        generateTokenAndSetCookie(newUser._id, res);
-        await newUser.save();
-        res.status(201).json({
-            _id: newUser._id,
-            fullName: newUser.fullName,
-            username: newUser.username,
-            email: newUser.email,
-            followers: newUser.followers,
-            following: newUser.following,
-            profileImg: newUser.profileImg,
-            coverImg: newUser.coverImg,
-        })
-    }else{
-        res.status(400).json({error: "Invalid user data"})
+    if (newUser) {
+      generateTokenAndSetCookie(newUser._id, res);
+      await newUser.save();
+      res.status(201).json({
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        username: newUser.username,
+        email: newUser.email,
+        followers: newUser.followers,
+        following: newUser.following,
+        profileImg: newUser.profileImg,
+        coverImg: newUser.coverImg,
+      });
+    } else {
+      res.status(400).json({ error: "Invalid user data" });
     }
-
   } catch (err) {
-    res.status(500).json({error: "Internal Server Error"})
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
