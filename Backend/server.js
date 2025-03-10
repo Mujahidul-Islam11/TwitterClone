@@ -3,10 +3,12 @@ const app = express();
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const connectDb = require("../Backend/db");
+const cookieParser = require("cookie-parser");
 const Port = 5000;
 
 app.use(cors());
 app.use(express.json()); // to parse req.body
+app.use(cookieParser());
 app.use(express.urlencoded({extended: true})) // to parse form data
 connectDb();
 
