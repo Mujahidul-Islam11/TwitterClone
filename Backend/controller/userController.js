@@ -1,3 +1,4 @@
+const Notification = require("../models/notification.model");
 const User = require("../models/user.model");
 
 const getUserProfile = async (req, res) => {
@@ -37,9 +38,17 @@ const followUnfollow = async (req, res) => {
       await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
       res.status(200).json({ message: "User Unfollowed Successfully" });
     } else {
-      // folow the user
+      // follow the user
       await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
       await User.findByIdAndUpdate(req.user._id, { $push: { following: id } });
+      
+      // notification
+      const newNotification = new Notification({
+        type: "follow",
+        from: req.user._id,
+        to: userModify._id
+      });
+      await newNotification.save();
       res.status(200).json({ message: "User Followed Successfully" });
     }
   } catch (err) {
