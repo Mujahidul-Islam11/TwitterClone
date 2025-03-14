@@ -86,12 +86,12 @@ const suggestedUsers = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { email, username, fullName, bio, link, newPassword, currentPassword } = req.body;
+  let { email, username, fullName, bio, link, newPassword, currentPassword } = req.body;
   let { profileImg, coverImg } = req.body;
 
   try {
     const userId = req.user._id;
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
     if(!user){
       return res.status(404).json({error: "User Not Found"});
     }
@@ -136,8 +136,12 @@ const updateProfile = async (req, res) => {
     user.profileImg = profileImg || user.profileImg;
     user.coverImg = coverImg || user.coverImg;
 
-    user = await User.save();
+    user = await user.save();
+
+    user.password = null;
+    res.status(200).json(user);
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
