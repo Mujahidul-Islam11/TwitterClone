@@ -1,5 +1,6 @@
 const Notification = require("../models/notification.model");
 const User = require("../models/user.model");
+const bcrypt = require("bcryptjs");
 
 const getUserProfile = async (req, res) => {
   try {
