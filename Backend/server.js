@@ -10,6 +10,7 @@ const cloudinary = v2;
 
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
+const postRoutes = require("./routes/post");
 
 dotenv.config()
 
@@ -27,6 +28,7 @@ connectDb();
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/post', postRoutes);
 
 app.get("/", (req, res)=>{
     res.send("Twitter's server is running");
