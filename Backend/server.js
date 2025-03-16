@@ -8,9 +8,10 @@ const Port = 5000;
 const dotenv = require("dotenv");
 const cloudinary = v2;
 
-const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/user");
-const postRoutes = require("./routes/post");
+const authRoute = require("./routes/auth");
+const userRoute = require("./routes/user");
+const postRoute = require("./routes/post");
+const notificationRoute = require("./routes/notification");
 
 dotenv.config()
 
@@ -26,9 +27,10 @@ app.use(cookieParser());
 app.use(express.urlencoded({extended: true})) // to parse form data
 connectDb();
 
-app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/post', postRoutes);
+app.use('/api/auth', authRoute);
+app.use('/api/user', userRoute);
+app.use('/api/post', postRoute);
+app.use('/api/notifications', notificationRoute);
 
 app.get("/", (req, res)=>{
     res.send("Twitter's server is running");
