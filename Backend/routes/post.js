@@ -4,7 +4,7 @@ const protectedRoute = require("../middleware/protectedRoute");
 const router = express.Router();
 
 router.get("/posts", protectedRoute, getAllPosts);
-router.get("/forMe", protectedRoute, followingPosts);
+router.get("/myFeed", protectedRoute, followingPosts);
 router.get("/liked/:id", protectedRoute, getLikedPosts);
 router.post("/create", protectedRoute, createPost);
 router.post("/likeUnlike/:id", protectedRoute, likeUnlikePost);

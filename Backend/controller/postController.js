@@ -198,7 +198,33 @@ const getLikedPosts = async (req, res) => {
   }
 };
 
+const followingPosts = async(req, res) =>{
+  try{
+    const userId = req.user._id;
+    const user = await User.findById(userId);
 
+    if(!user){
+      return res.status(500).json({error: "No User Found"});
+    };
+
+    const following = user.following;
+    
+    const feedPosts = await Post.find({user: {$in: following}}).sort({createdAt: -1}).populate({
+      path: "user",
+      select: "-password"
+    }).populate({
+      path: "comments.user",
+      select: "-password"
+    });
+
+
+    res.status(200).json(feedPosts)
+
+  }catch(err){
+    res.status(500).json({error: "Internal Server Error"});
+    console.log(err);
+  }
+}
 
 module.exports = {
   createPost,
