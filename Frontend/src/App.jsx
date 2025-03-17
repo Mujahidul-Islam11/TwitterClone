@@ -3,7 +3,9 @@ function App() {
 
   return (
     <div>
-      <h4 className="flex justify-center">Hello world</h4>
+      <button className="btn btn-accent">Accent</button>
+      <button className="btn btn-info">Info</button>
+      <button className="btn btn-success">Success</button>
     </div>
   )
 }
