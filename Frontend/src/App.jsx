@@ -5,11 +5,13 @@ import HomePage from "./pages/home/homePage"
 import Sidebar from "./components/common/Sidebar"
 import RightPanel from "./components/common/RightPanel"
 import ProfilePage from "./pages/proflie/ProfilePage"
+import { Toaster } from "react-hot-toast"
 
 function App() {
 
   return (
     <div className='flex max-w-6xl mx-auto'>
+      <Toaster position="top-center"/>
       <Sidebar />
       <Routes>
         <Route path='/' element={<HomePage />} />
