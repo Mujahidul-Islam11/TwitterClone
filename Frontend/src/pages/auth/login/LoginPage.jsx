@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
 import XSvg from "../../../components/svgs/X";
-
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
+import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
+import toast from "react-hot-toast"
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({
@@ -12,16 +13,38 @@ const LoginPage = () => {
 		password: "",
 	});
 
+	const { mutate, isError, isPending, error } = useMutation({
+		mutationFn: async (formData) => {
+			try {
+				const res = await axios.post("http://localhost:5000/api/auth/login", formData);
+				const data = res.data;
+				console.log(data)
+				
+				if (data.error) throw new Error( data.error ||"Something went wrong");
+
+
+				return data;
+			} catch (error) {
+				console.error(error.response.data.message || "something went wrong" || error.message);
+				toast.error(error.response.data.message || "something went wrong")
+				throw error
+			}
+		},
+		onSuccess: ()=>{
+			toast.success("Logged In Successfully");
+		}
+	})
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		console.log(formData);
+		mutate(formData);
 	};
 
 	const handleInputChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const isError = false;
 
 	return (
 		<div className='max-w-screen-xl mx-auto flex h-screen'>
@@ -56,7 +79,7 @@ const LoginPage = () => {
 						/>
 					</label>
 					<button className='btn rounded-full btn-primary text-white'>Login</button>
-					{isError && <p className='text-red-500'>Something went wrong</p>}
+					{isError && <p className='text-red-500'>{error.message}</p>}
 				</form>
 				<div className='flex flex-col gap-2 mt-4'>
 					<p className='text-white text-lg'>{"Don't"} have an account?</p>
