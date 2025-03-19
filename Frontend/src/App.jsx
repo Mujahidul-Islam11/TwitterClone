@@ -6,8 +6,29 @@ import Sidebar from "./components/common/Sidebar"
 import RightPanel from "./components/common/RightPanel"
 import ProfilePage from "./pages/proflie/ProfilePage"
 import { Toaster } from "react-hot-toast"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
 
 function App() {
+
+  const {data: user = [], isLoading, error} = useQuery({
+    queryKey: ["authUser"],
+    queryFn: async() =>{
+      try {
+        const res = await axios.get("http://localhost:5000/api/auth/me");
+
+        if (res.data.error) throw new Error( res.data.error ||"Something went wrong");
+       
+        console.log(res.data)
+
+        return res.data;
+      } catch (error) {
+        console.error(error.message);
+        throw new Error(error.message);
+      }
+      
+    }
+  })
 
   return (
     <div className='flex max-w-6xl mx-auto'>

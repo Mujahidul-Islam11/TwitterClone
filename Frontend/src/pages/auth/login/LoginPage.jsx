@@ -22,7 +22,6 @@ const LoginPage = () => {
 				
 				if (data.error) throw new Error( data.error ||"Something went wrong");
 
-
 				return data;
 			} catch (error) {
 				console.error(error.response.data.message || "something went wrong" || error.message);
