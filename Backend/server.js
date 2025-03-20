@@ -21,7 +21,10 @@ cloudinary.config({
     cloud_secret: process.env.CLOUD_SECRET
 })
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 app.use(express.json()); // to parse req.body
 app.use(cookieParser());
 app.use(express.urlencoded({extended: true})) // to parse form data

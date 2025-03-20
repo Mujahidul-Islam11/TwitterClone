@@ -11,11 +11,13 @@ import axios from "axios"
 
 function App() {
 
-  const {data: user = [], isLoading, error} = useQuery({
+  const {data, isLoading, error} = useQuery({
     queryKey: ["authUser"],
     queryFn: async() =>{
       try {
-        const res = await axios.get("http://localhost:5000/api/auth/me");
+        const res = await axios.get("http://localhost:5000/api/auth/me", {
+          withCredentials: true,
+        });
 
         if (res.data.error) throw new Error( res.data.error ||"Something went wrong");
        
@@ -28,7 +30,9 @@ function App() {
       }
       
     }
-  })
+  });
+
+  console.log(data)
 
   return (
     <div className='flex max-w-6xl mx-auto'>
