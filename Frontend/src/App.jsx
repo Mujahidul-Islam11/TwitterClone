@@ -21,7 +21,6 @@ function App() {
 
         if (res.data.error) throw new Error( res.data.error ||"Something went wrong");
        
-        console.log(res.data)
 
         return res.data;
       } catch (error) {

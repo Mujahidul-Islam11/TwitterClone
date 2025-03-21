@@ -10,7 +10,7 @@ const generateTokenAndSetCookie = (userId, res) => {
     maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
     httpOnly: true, // Prevents JavaScript access
     secure: false, // Set to true in production with HTTPS
-    sameSite: "lax", // Helps with CORS
+    sameSite: "strict", // Helps with CORS
   });
   
 };
