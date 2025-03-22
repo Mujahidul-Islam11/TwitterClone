@@ -3,8 +3,8 @@ const { createPost, deletePost, commentOnPost, likeUnlikePost, getAllPosts, getL
 const protectedRoute = require("../middleware/protectedRoute");
 const router = express.Router();
 
-router.get("/posts", protectedRoute, getAllPosts);
-router.get("/myFeed", protectedRoute, followingPosts);
+router.get("/all", protectedRoute, getAllPosts);
+router.get("/following", protectedRoute, followingPosts);
 router.get("/liked/:id", protectedRoute, getLikedPosts);
 router.get("/user/:username", protectedRoute, getUsersPosts);
 router.post("/create", protectedRoute, createPost);

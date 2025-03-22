@@ -1,9 +1,46 @@
 import Post from "./Post";
 import PostSkeleton from "../skeletons/PostSkeleton";
-import { POSTS } from "../../utils/db/dummy";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useEffect } from "react";
 
-const Posts = () => {
-	const isLoading = false;
+const Posts = ({ feedType }) => {
+
+	const getPostsEndPoints = () => {
+		switch (feedType) {
+			case "forYou":
+				return "http://localhost:5000/api/post/all";
+			case "following":
+				return "http://localhost:5000/api/post/following"
+			default:
+				return "http://localhost:5000/api/post/all"
+		}
+	}
+
+	const postEndPoints = getPostsEndPoints();
+
+	const { data: POSTS, isLoading, refetch } = useQuery({
+		queryKey: ["posts"],
+		queryFn: async () => {
+			try {
+				const res = await axios.get(postEndPoints, {
+					withCredentials: true
+				});
+
+				const data = res.data;
+
+				if (data.error) throw new Error(data.error || "Something went wrong");
+
+				return data;
+			} catch (error) {
+				throw new Error(error.response.message || error.message || "Something went wrong")
+			}
+		}
+	});
+
+	useEffect(()=>{
+		refetch();
+	},[feedType, refetch]);
 
 	return (
 		<>
