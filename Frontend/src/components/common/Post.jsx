@@ -5,15 +5,40 @@ import { FaRegBookmark } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-const Post = ({ post }) => {
+const Post = ({ post, refetch }) => {
 	const [comment, setComment] = useState("");
 	const postOwner = post.user;
     const queryClient = useQueryClient();
 
-	const authUser = queryClient.getQueryData(["authUser"])
- 
+	const authUser = queryClient.getQueryData(["authUser"]);
+
+	const { mutate: deletePost} = useMutation({
+		mutationFn: async()=>{
+			try {
+				const res = await axios.delete(`http://localhost:5000/api/post/${post._id}`, {
+					withCredentials: true,
+				});
+
+                if(res.data.error){
+					return toast.error(data.error || "Something went wrong");
+				}
+
+				refetch();
+
+				return res.data
+			} catch (error) {
+				throw new Error(error.response.message || error.message || "Something went wrong")
+			}
+		},
+		onSuccess: ()=>{
+			toast.success("Post deleted successfully")
+		}
+	})
+   
 	const isLiked = false;
 
 	const isMyPost = authUser.user._id === post.user._id;
@@ -22,7 +47,6 @@ const Post = ({ post }) => {
 
 	const isCommenting = false;
 
-	const handleDeletePost = () => {};
 
 	const handlePostComment = (e) => {
 		e.preventDefault();
@@ -50,7 +74,7 @@ const Post = ({ post }) => {
 						</span>
 						{isMyPost && (
 							<span className='flex justify-end flex-1'>
-								<FaTrash className='cursor-pointer hover:text-red-500' onClick={handleDeletePost} />
+								<FaTrash className='cursor-pointer hover:text-red-500' onClick={()=> deletePost()} />
 							</span>
 						)}
 					</div>
