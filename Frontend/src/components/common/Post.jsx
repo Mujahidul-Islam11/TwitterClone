@@ -12,18 +12,18 @@ import toast from "react-hot-toast";
 const Post = ({ post, refetch }) => {
 	const [comment, setComment] = useState("");
 	const postOwner = post.user;
-    const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
 	const authUser = queryClient.getQueryData(["authUser"]);
 
-	const { mutate: deletePost} = useMutation({
-		mutationFn: async()=>{
+	const { mutate: deletePost } = useMutation({
+		mutationFn: async () => {
 			try {
 				const res = await axios.delete(`http://localhost:5000/api/post/${post._id}`, {
 					withCredentials: true,
 				});
 
-                if(res.data.error){
+				if (res.data.error) {
 					return toast.error(data.error || "Something went wrong");
 				}
 
@@ -34,12 +34,35 @@ const Post = ({ post, refetch }) => {
 				throw new Error(error.response.message || error.message || "Something went wrong")
 			}
 		},
-		onSuccess: ()=>{
+		onSuccess: () => {
 			toast.success("Post deleted successfully")
 		}
 	})
-   
-	const isLiked = false;
+
+	const { mutate: likePost } = useMutation({
+		mutationFn: async () => {
+			try {
+				const res = await axios.post(`http://localhost:5000/api/post/likeUnlike/${post._id}`, {}, {
+					withCredentials: true,
+				});
+
+				if (res.data.error) {
+					return toast.error(data.error || "Something went wrong");
+				}
+
+				refetch();
+
+				return res.data
+			} catch (error) {
+				throw new Error(error.response.message || error.message || "Something went wrong")
+			}
+		},
+		onSuccess: () => {
+			toast.success("Liked post successfully")
+		}
+	})
+
+	const isLiked = authUser.user.likedPosts.includes(post._id);
 
 	const isMyPost = authUser.user._id === post.user._id;
 
@@ -52,7 +75,6 @@ const Post = ({ post, refetch }) => {
 		e.preventDefault();
 	};
 
-	const handleLikePost = () => {};
 
 	return (
 		<>
@@ -74,7 +96,7 @@ const Post = ({ post, refetch }) => {
 						</span>
 						{isMyPost && (
 							<span className='flex justify-end flex-1'>
-								<FaTrash className='cursor-pointer hover:text-red-500' onClick={()=> deletePost()} />
+								<FaTrash className='cursor-pointer hover:text-red-500' onClick={() => deletePost()} />
 							</span>
 						)}
 					</div>
@@ -157,16 +179,15 @@ const Post = ({ post, refetch }) => {
 								<BiRepost className='w-6 h-6  text-slate-500 group-hover:text-green-500' />
 								<span className='text-sm text-slate-500 group-hover:text-green-500'>0</span>
 							</div>
-							<div className='flex gap-1 items-center group cursor-pointer' onClick={handleLikePost}>
+							<div className='flex gap-1 items-center group cursor-pointer' onClick={()=> likePost()}>
 								{!isLiked && (
 									<FaRegHeart className='w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500' />
 								)}
 								{isLiked && <FaRegHeart className='w-4 h-4 cursor-pointer text-pink-500 ' />}
 
 								<span
-									className={`text-sm text-slate-500 group-hover:text-pink-500 ${
-										isLiked ? "text-pink-500" : ""
-									}`}
+									className={`text-sm text-slate-500 group-hover:text-pink-500 ${isLiked ? "text-pink-500" : ""
+										}`}
 								>
 									{post.likes.length}
 								</span>
