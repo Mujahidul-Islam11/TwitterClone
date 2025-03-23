@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { formatPostDate } from "../../utils/date";
 
 const Post = ({ post, refetch }) => {
 	const [comment, setComment] = useState("");
@@ -92,7 +93,7 @@ const Post = ({ post, refetch }) => {
 
 	const isMyPost = authUser.user._id === post.user._id;
 
-	const formattedDate = "1h";
+	const formattedDate = formatPostDate(post.createdAt);
 
 	return (
 		<>
