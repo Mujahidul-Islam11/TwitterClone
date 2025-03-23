@@ -31,6 +31,7 @@ const Post = ({ post, refetch }) => {
 
 				return res.data
 			} catch (error) {
+				toast.error(error.message || "Something went wrong");
 				throw new Error(error.response.message || error.message || "Something went wrong")
 			}
 		},
@@ -77,6 +78,7 @@ const Post = ({ post, refetch }) => {
 
 				return res.data
 			} catch (error) {
+				toast.error(error.message || "Something went wrong")
 				throw new Error(error.response.message || error.message || "Something went wrong")
 			}
 		},
