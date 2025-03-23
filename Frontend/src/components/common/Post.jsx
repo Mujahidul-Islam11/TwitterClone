@@ -60,6 +60,30 @@ const Post = ({ post, refetch }) => {
 		onSuccess: () => {
 			toast.success("Liked post successfully")
 		}
+	});
+
+	const { mutate: commentOnPost, isPending: isCommenting } = useMutation({
+		mutationFn: async () => {
+			try {
+				const res = await axios.post(`http://localhost:5000/api/post/comment/${post._id}`, {text: comment}, {
+					withCredentials: true,
+				});
+
+				if (res.data.error) {
+					return toast.error(data.error || "Something went wrong");
+				}
+
+				refetch();
+
+				return res.data
+			} catch (error) {
+				throw new Error(error.response.message || error.message || "Something went wrong")
+			}
+		},
+		onSuccess: () => {
+			toast.success("Liked post successfully");
+			setComment("");
+		}
 	})
 
 	const isLiked = authUser.user.likedPosts.includes(post._id);
@@ -67,14 +91,6 @@ const Post = ({ post, refetch }) => {
 	const isMyPost = authUser.user._id === post.user._id;
 
 	const formattedDate = "1h";
-
-	const isCommenting = false;
-
-
-	const handlePostComment = (e) => {
-		e.preventDefault();
-	};
-
 
 	return (
 		<>
@@ -154,7 +170,10 @@ const Post = ({ post, refetch }) => {
 									</div>
 									<form
 										className='flex gap-2 items-center mt-4 border-t border-gray-600 pt-2'
-										onSubmit={handlePostComment}
+										onSubmit={(e) => {
+											e.preventDefault();
+											commentOnPost();
+										}}
 									>
 										<textarea
 											className='textarea w-full p-1 rounded text-md resize-none border focus:outline-none  border-gray-800'
