@@ -7,10 +7,10 @@ const connectDb = require("../Backend/db");
 const cookieParser = require("cookie-parser");
 const Port = 5000;
 
-const authRoute = require("./routes/auth");
-const userRoute = require("./routes/user");
-const postRoute = require("./routes/post");
-const notificationRoute = require("./routes/notification");
+const authRoute = require("./routes/auth.router");
+const userRoute = require("./routes/user.router");
+const postRoute = require("./routes/post.router");
+const notificationRoute = require("./routes/notification.router");
 
 app.use(cors({
     origin: "http://localhost:5173",

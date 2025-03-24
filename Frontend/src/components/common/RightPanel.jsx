@@ -1,9 +1,18 @@
 import { Link } from "react-router-dom";
 import RightPanelSkeleton from "../skeletons/RightPanelSkeleton";
 import { USERS_FOR_RIGHT_PANEL } from "../../utils/db/dummy";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const RightPanel = () => {
 	const isLoading = false;
+
+	const {data} = useQuery({
+		queryKey: ["suggestedUser"],
+		queryFn: async()=>{
+			const res = await axios.get("http://localhost:5000/api/user/suggested")
+		}
+	})
 
 	return (
 		<div className='hidden lg:block my-4 mx-2'>
