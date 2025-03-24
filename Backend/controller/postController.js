@@ -1,11 +1,11 @@
+const cloudinary  = require("../cloudinary/config");
 const Notification = require("../models/notification.model");
 const Post = require("../models/post.model");
 const User = require("../models/user.model");
-const { v2 } = require("cloudinary");
-const cloudinary = v2;
 
 const createPost = async (req, res) => {
   try {
+    const cloud = cloudinary.config();
     const { text } = req.body;
     let { img } = req.body;
     const userId = req.user._id.toString();
@@ -49,7 +49,7 @@ const deletePost = async (req, res) => {
 
     if (post.img) {
       const imgId = post.img.split("/").pop().split(".")[0];
-      await cloudinary.destroy(imgId);
+      await cloudinary.uploader.destroy(imgId);
     }
 
     await Post.findByIdAndDelete(req.params.id);

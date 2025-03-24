@@ -1,25 +1,16 @@
+const dotenv = require("dotenv");
+dotenv.config()
 const express = require("express");
 const app = express();
 const cors = require("cors");
 const connectDb = require("../Backend/db");
 const cookieParser = require("cookie-parser");
-const {v2} = require("cloudinary");
 const Port = 5000;
-const dotenv = require("dotenv");
-const cloudinary = v2;
 
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const postRoute = require("./routes/post");
 const notificationRoute = require("./routes/notification");
-
-dotenv.config()
-
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API,
-    cloud_secret: process.env.CLOUD_SECRET
-})
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -27,7 +18,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 
-app.use(express.json()); // to parse req.body
+app.use(express.json({limit: '5mb'})); // to parse req.body
 app.use(cookieParser());
 app.use(express.urlencoded({extended: true})) // to parse form data
 connectDb();

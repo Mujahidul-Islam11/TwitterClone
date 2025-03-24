@@ -31,6 +31,7 @@ const CreatePost = () => {
 			toast.success("Post created successfully");
 			queryClient.invalidateQueries(["posts"])
 			setText("")
+			setImg("")
 		}
 	})
 
