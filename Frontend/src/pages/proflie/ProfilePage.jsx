@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import Posts from "../../components/common/Posts";
@@ -14,6 +14,7 @@ import axios from "axios";
 import { formatMemberSinceDate } from "../../utils/date";
 import useFollow from "../../hooks/useFollow";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
+import useEditProfile from "../../hooks/useEditProfile";
 
 const ProfilePage = () => {
 	const queryClient = useQueryClient()
@@ -28,26 +29,28 @@ const ProfilePage = () => {
 	const profileImgRef = useRef(null);
 
 	const { username } = useParams();
-	
+
 	const { data: user, isLoading } = useQuery({
 		queryKey: ["userProfile", username],
 		queryFn: async () => {
 			try {
 				const res = await axios.get(`http://localhost:5000/api/user/profile/${username}`, { withCredentials: true });
 				const data = res.data;
-				
+
 				if (data.error) throw new Error(data.error || "Something went wrong");
-				
+
 				return data;
 			} catch (error) {
 				throw new Error(error.message || "Something went wrong");
 			}
 		}
 	})
-	
+
 	const isFollowing = authUser?.user?.following.includes(user?._id);
 
 	const isMyProfile = authUser?.user?._id === user?._id;
+
+	const { editProfile, isPending: isProfileUpdating } = useEditProfile();
 
 	const handleImgChange = (e, state) => {
 		const file = e.target.files[0];
@@ -132,16 +135,20 @@ const ProfilePage = () => {
 											followUnfollowUser(user._id);
 										}}
 									>
-										{isPending && <LoadingSpinner/>} 
+										{isPending && <LoadingSpinner />}
 										{isFollowing ? "Unfollow" : "Follow"}
 									</button>
 								)}
 								{(coverImg || profileImg) && (
 									<button
 										className='btn btn-primary rounded-full btn-sm text-white px-4 ml-2'
-										onClick={() => alert("Profile updated successfully")}
+										onClick={() => {
+											editProfile({profileImg, coverImg});
+										    setProfileImg(null)
+										    setCoverImg(null)
+										}}
 									>
-										Update
+										{isProfileUpdating? "Updating..." : "Update"}
 									</button>
 								)}
 							</div>

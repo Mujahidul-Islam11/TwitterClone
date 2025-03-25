@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
+import useEditProfile from "../../hooks/useEditProfile";
 
 const EditProfileModal = () => {
 	const [formData, setFormData] = useState({
@@ -16,24 +16,7 @@ const EditProfileModal = () => {
 
 	const queryClient = useQueryClient();
 
-	const { mutate: editProfile } = useMutation({
-		mutationFn: async (formData) => {
-			try {
-				const res = await axios.post("http://localhost:5000/api/user/update", formData, { withCredentials: true });
-
-				const data = res.data;
-
-				if(data.error) throw new Error(data.error || "Something went wrong");
-
-				return data;
-			} catch (error) {
-				throw new Error(error.message || "Something went wrong")
-			}
-		}, onSuccess: ()=>{
-			toast.success("Profile updated successfully");
-			queryClient.invalidateQueries(["authUser"]);
-		}
-	})
+	const { editProfile, isPending } = useEditProfile();
 
 	const profileData = queryClient.getQueryData(["authUser"]);
 
@@ -120,7 +103,7 @@ const EditProfileModal = () => {
 							name='link'
 							onChange={handleInputChange}
 						/>
-						<button onClick={()=> editProfile(formData)} className='btn btn-primary rounded-full btn-sm text-white'>Update</button>
+						<button onClick={() => editProfile(formData)} className='btn btn-primary rounded-full btn-sm text-white'> {isPending && <LoadingSpinner />} Update</button>
 					</form>
 				</div>
 				<form method='dialog' className='modal-backdrop'>
