@@ -13,6 +13,9 @@ import { MdEdit } from "react-icons/md";
 import EditProfileModal from "./EditProfileModel";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { formatMemberSinceDate } from "../../utils/date";
+import useFollow from "../../hooks/useFollow";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const ProfilePage = () => {
 	const queryClient = useQueryClient()
@@ -20,32 +23,34 @@ const ProfilePage = () => {
 	const [coverImg, setCoverImg] = useState(null);
 	const [profileImg, setProfileImg] = useState(null);
 	const [feedType, setFeedType] = useState("posts");
+	const { followUnfollowUser, isPending } = useFollow();
 
 	const coverImgRef = useRef(null);
 	const profileImgRef = useRef(null);
 
 	const { username } = useParams();
-
-	const isMyProfile = true;
-
+	
 	const { data: user, isLoading } = useQuery({
 		queryKey: ["userProfile", username],
 		queryFn: async () => {
 			try {
 				const res = await axios.get(`http://localhost:5000/api/user/profile/${username}`, { withCredentials: true });
 				const data = res.data;
-
+				
 				console.log(data)
-
+				
 				if (data.error) throw new Error(data.error || "Something went wrong");
-
+				
 				return data;
 			} catch (error) {
 				throw new Error(error.message || "Something went wrong");
 			}
 		}
 	})
+	
+	const isFollowing = authUser.user.following.includes(user._id);
 
+	const isMyProfile = authUser?.user?._id === user?._id;
 
 	const handleImgChange = (e, state) => {
 		const file = e.target.files[0];
@@ -125,9 +130,13 @@ const ProfilePage = () => {
 								{!isMyProfile && (
 									<button
 										className='btn btn-outline rounded-full btn-sm'
-										onClick={() => alert("Followed successfully")}
+										onClick={(e) => {
+											e.preventDefault();
+											followUnfollowUser(user._id);
+										}}
 									>
-										Follow
+										{isPending && <LoadingSpinner/>} 
+										{isFollowing ? "Unfollow" : "Follow"}
 									</button>
 								)}
 								{(coverImg || profileImg) && (
@@ -165,7 +174,7 @@ const ProfilePage = () => {
 									)}
 									<div className='flex gap-2 items-center'>
 										<IoCalendarOutline className='w-4 h-4 text-slate-500' />
-										<span className='text-sm text-slate-500'>Joined July 2021</span>
+										<span className='text-sm text-slate-500'>{formatMemberSinceDate(user.createdAt)}</span>
 									</div>
 								</div>
 								<div className='flex gap-2'>
@@ -202,7 +211,7 @@ const ProfilePage = () => {
 						</>
 					)}
 
-					<Posts feedType={feedType} username={username} userId={user?._id}/>
+					<Posts feedType={feedType} username={username} userId={user?._id} />
 				</div>
 			</div>
 		</>
