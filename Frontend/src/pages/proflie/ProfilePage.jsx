@@ -37,8 +37,6 @@ const ProfilePage = () => {
 				const res = await axios.get(`http://localhost:5000/api/user/profile/${username}`, { withCredentials: true });
 				const data = res.data;
 				
-				console.log(data)
-				
 				if (data.error) throw new Error(data.error || "Something went wrong");
 				
 				return data;
@@ -48,7 +46,7 @@ const ProfilePage = () => {
 		}
 	})
 	
-	const isFollowing = authUser.user.following.includes(user._id);
+	const isFollowing = authUser?.user?.following.includes(user?._id);
 
 	const isMyProfile = authUser?.user?._id === user?._id;
 
