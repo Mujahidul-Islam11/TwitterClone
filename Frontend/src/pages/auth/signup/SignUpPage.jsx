@@ -24,12 +24,12 @@ const SignUpPage = () => {
 			try {
 				const res = await axios.post("http://localhost:5000/api/auth/signup", formData, {
 					withCredentials: true,
-				  });
+				});
 
 				const data = res.data;
-				
+
 				if (data.error) throw new Error(data.error || "Something went wrong");
-				
+
 				console.log(data);
 
 				toast.success("User created successfully");
@@ -37,7 +37,7 @@ const SignUpPage = () => {
 				return data;
 			} catch (error) {
 				console.error(error);
-				toast.error(error.response?.data?.message || error.message || "Something went wrong");
+				toast.error(error.response?.data?.error || error.message || "Something went wrong");
 			}
 		}
 	})
@@ -108,7 +108,7 @@ const SignUpPage = () => {
 						/>
 					</label>
 					<button className='btn rounded-full btn-primary text-white'>Sign up</button>
-					{isError && <p className='text-red-500'>{error.message}</p>}
+					{isError && <p className='text-red-500'>{error.response?.data?.error || error.message}</p>}
 				</form>
 				<div className='flex flex-col lg:w-2/3 gap-2 mt-4'>
 					<p className='text-white text-lg'>Already have an account?</p>

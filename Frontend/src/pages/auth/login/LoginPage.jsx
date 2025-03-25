@@ -29,8 +29,8 @@ const LoginPage = () => {
 
 				return data;
 			} catch (error) {
-				console.error(error.response.data.message || "something went wrong" || error.message);
-				toast.error(error.response.data.message || "something went wrong")
+				console.error(error.response.data.error || "something went wrong" || error.message);
+				toast.error(error.response.data.error || "something went wrong")
 				throw error
 			}
 		},
@@ -83,7 +83,7 @@ const LoginPage = () => {
 						/>
 					</label>
 					<button className='btn rounded-full btn-primary text-white'>{isPending? "Loading...": "Login"}</button>
-					{isError && <p className='text-red-500'>{error.message}</p>}
+					{isError && <p className='text-red-500'>{error?.response?.data?.error || error.message}</p>}
 				</form>
 				<div className='flex flex-col gap-2 mt-4'>
 					<p className='text-white text-lg'>{"Don't"} have an account?</p>

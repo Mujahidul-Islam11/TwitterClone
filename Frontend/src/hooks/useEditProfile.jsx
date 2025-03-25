@@ -1,9 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const useEditProfile = () => {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const authUser = queryClient.getQueryData(["authUser"]);
 
     const { mutate: editProfile, isPending } = useMutation({
         mutationFn: async (formData) => {
@@ -19,9 +22,13 @@ const useEditProfile = () => {
             } catch (error) {
                 throw new Error(error.message || "Something went wrong")
             }
-        }, onSuccess: () => {
+        }, onSuccess: async() => {
             toast.success("Profile updated successfully");
-            queryClient.invalidateQueries(["authUser"]);
+
+            await queryClient.invalidateQueries(["userProfile"]);
+            await queryClient.invalidateQueries(["authUser"]);
+            
+            navigate(`/profile/${authUser?.user?.username}`);
         }
     })
     return { editProfile, isPending }

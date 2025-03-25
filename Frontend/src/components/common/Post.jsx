@@ -61,7 +61,8 @@ const Post = ({ post, refetch }) => {
 			}
 		},
 		onSuccess: () => {
-			toast.success("Liked post successfully")
+			toast.success("Liked post successfully");
+			queryClient.invalidateQueries(["notifications"])
 		}
 	});
 

@@ -4,13 +4,17 @@ import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import toast from "react-hot-toast"
 
 const NotificationPage = () => {
 
-	const { data: notifications, isLoading, refetch } = useQuery({
+	const queryClient = useQueryClient();
+
+	const authUser = queryClient.getQueryData(["authUser"]);
+
+	const { data: notificationsData, isLoading, refetch } = useQuery({
 		queryKey: ["notifications"],
 		queryFn: async () => {
 			try {
@@ -46,6 +50,10 @@ const NotificationPage = () => {
 			refetch();
 		}
 	})
+
+	const notifications = notificationsData?.filter((notify) => notify?.from._id !== authUser?.user?._id)
+
+	console.log(notifications)
 
 	const handleDeleteNotifications = () => {
 		deleteNotifications();

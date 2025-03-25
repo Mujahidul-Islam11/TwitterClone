@@ -22,6 +22,7 @@ const useFollow = () => {
         onSuccess: ()=>{
             queryClient.invalidateQueries(["authUser"]);
             queryClient.invalidateQueries(["suggestedUser"]);
+            queryClient.invalidateQueries(["notifications"]);
         }
 	})
 
