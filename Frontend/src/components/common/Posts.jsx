@@ -4,14 +4,18 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
 
-const Posts = ({ feedType }) => {
+const Posts = ({ feedType, username, userId }) => {
 
 	const getPostsEndPoints = () => {
 		switch (feedType) {
 			case "forYou":
 				return "http://localhost:5000/api/post/all";
 			case "following":
-				return "http://localhost:5000/api/post/following"
+				return "http://localhost:5000/api/post/following";
+			case "posts":
+				return `http://localhost:5000/api/post/user/${username}`;
+			case "likes":
+				return `http://localhost:5000/api/post/liked/${userId}`;
 			default:
 				return "http://localhost:5000/api/post/all"
 		}
@@ -40,7 +44,7 @@ const Posts = ({ feedType }) => {
 
 	useEffect(()=>{
 		refetch();
-	},[feedType, refetch]);
+	},[feedType, refetch, username, userId]);
 
 	return (
 		<>

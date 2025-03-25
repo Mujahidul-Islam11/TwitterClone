@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import RightPanelSkeleton from "../skeletons/RightPanelSkeleton";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const RightPanel = () => {
@@ -20,6 +20,31 @@ const RightPanel = () => {
 			}
 		}
 	})
+
+	const {mutate: followUnfollowUser} = useMutation({
+		mutationFn: async(userId)=>{
+			try {
+				const res = await axios.post(`http://localhost:5000/api/user/follow/${userId}`, {}, {withCredentials: true})
+				const data = res.data;
+
+				console.log(data)
+
+				if(data.error) throw new Error(data.error || "Something went wrong");
+
+				return data;
+				
+			} catch (error) {
+				console.log(error.message || "Something went wrong")
+				throw new Error(error.message || "Something went wrong")
+			}
+		}
+	})
+    
+	if(users?.length === 0) return <div className="md:w-64 w-0"></div>
+
+	const handleFollowUnFollow = (userId) =>{
+		followUnfollowUser(userId)
+	}
 
 	return (
 		<div className='hidden lg:block my-4 mx-2'>
@@ -58,7 +83,10 @@ const RightPanel = () => {
 								<div>
 									<button
 										className='btn bg-white text-black hover:bg-white hover:opacity-90 rounded-full btn-sm'
-										onClick={(e) => e.preventDefault()}
+										onClick={(e) => {
+											e.preventDefault();
+											handleFollowUnFollow(user._id)
+										}}
 									>
 										Follow
 									</button>

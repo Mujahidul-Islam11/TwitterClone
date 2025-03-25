@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Posts from "../../components/common/Posts";
 import ProfileHeaderSkeleton from "../../components/skeletons/ProfileHeaderSkeleton";
@@ -11,10 +11,12 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import EditProfileModal from "./EditProfileModel";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 const ProfilePage = () => {
-	const {data: user, isLoading, error} = useQuery({queryKey: ["authUser"]})
+	const queryClient = useQueryClient()
+	const authUser = queryClient.getQueryData(["authUser"]);
 	const [coverImg, setCoverImg] = useState(null);
 	const [profileImg, setProfileImg] = useState(null);
 	const [feedType, setFeedType] = useState("posts");
@@ -22,7 +24,27 @@ const ProfilePage = () => {
 	const coverImgRef = useRef(null);
 	const profileImgRef = useRef(null);
 
+	const { username } = useParams();
+
 	const isMyProfile = true;
+
+	const { data: user, isLoading } = useQuery({
+		queryKey: ["userProfile", username],
+		queryFn: async () => {
+			try {
+				const res = await axios.get(`http://localhost:5000/api/user/profile/${username}`, { withCredentials: true });
+				const data = res.data;
+
+				console.log(data)
+
+				if (data.error) throw new Error(data.error || "Something went wrong");
+
+				return data;
+			} catch (error) {
+				throw new Error(error.message || "Something went wrong");
+			}
+		}
+	})
 
 
 	const handleImgChange = (e, state) => {
@@ -180,7 +202,7 @@ const ProfilePage = () => {
 						</>
 					)}
 
-					<Posts />
+					<Posts feedType={feedType} username={username} userId={user?._id}/>
 				</div>
 			</div>
 		</>
