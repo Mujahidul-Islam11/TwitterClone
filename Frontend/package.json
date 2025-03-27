@@ -18,7 +18,8 @@
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.3.0",
-    "tailwindcss": "^4.0.14"
+    "tailwindcss": "^4.0.14",
+    "twitterclone": "file:.."
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
