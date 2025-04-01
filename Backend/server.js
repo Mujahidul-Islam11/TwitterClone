@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({path: "../.env"});
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -33,5 +33,7 @@ app.get("/", (req, res)=>{
 })
 
 app.listen(Port, ()=>{
-    console.log(`Server is running on port ${Port}`);
+    console.log("server is running on port 5000")
 })
+
+module.exports = app;
