@@ -7,7 +7,7 @@ const useFollow = () => {
     const {mutate: followUnfollowUser, isPending} = useMutation({
 		mutationFn: async(userId)=>{
 			try {
-				const res = await axios.post(`http://localhost:5000/api/user/follow/${userId}`, {}, {withCredentials: true})
+				const res = await axios.post(`https://twittercloneserver.vercel.app/api/user/follow/${userId}`, {}, {withCredentials: true})
 				const data = res.data;
 
 				if(data.error) throw new Error(data.error || "Something went wrong");

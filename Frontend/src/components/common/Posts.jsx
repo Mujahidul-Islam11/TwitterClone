@@ -9,15 +9,15 @@ const Posts = ({ feedType, username, userId }) => {
 	const getPostsEndPoints = () => {
 		switch (feedType) {
 			case "forYou":
-				return "http://localhost:5000/api/post/all";
+				return "https://twittercloneserver.vercel.app/api/post/all";
 			case "following":
-				return "http://localhost:5000/api/post/following";
+				return "https://twittercloneserver.vercel.app/api/post/following";
 			case "posts":
-				return `http://localhost:5000/api/post/user/${username}`;
+				return `https://twittercloneserver.vercel.app/api/post/user/${username}`;
 			case "likes":
-				return `http://localhost:5000/api/post/liked/${userId}`;
+				return `https://twittercloneserver.vercel.app/api/post/liked/${userId}`;
 			default:
-				return "http://localhost:5000/api/post/all"
+				return "https://twittercloneserver.vercel.app/api/post/all"
 		}
 	}
 

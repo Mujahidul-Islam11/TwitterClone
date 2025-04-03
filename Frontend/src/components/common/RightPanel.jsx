@@ -12,7 +12,7 @@ const RightPanel = () => {
 		queryKey: ["suggestedUser"],
 		queryFn: async () => {
 			try {
-				const res = await axios.get("http://localhost:5000/api/user/suggested", {withCredentials: true});
+				const res = await axios.get("https://twittercloneserver.vercel.app/api/user/suggested", {withCredentials: true});
 
 				if (res.data.error) throw new Error(res.data.error || "Something went wrong")
 

@@ -14,7 +14,7 @@ const Sidebar = () => {
 	const { mutate } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await axios.post("http://localhost:5000/api/auth/logout", {}, {
+				const res = await axios.post("https://twittercloneserver.vercel.app/api/auth/logout", {}, {
 					withCredentials: true,
 				});
 				const data = res.data;

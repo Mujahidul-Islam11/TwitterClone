@@ -18,7 +18,7 @@ const NotificationPage = () => {
 		queryKey: ["notifications"],
 		queryFn: async () => {
 			try {
-				const res = await axios.get("http://localhost:5000/api/notifications", { withCredentials: true });
+				const res = await axios.get("https://twittercloneserver.vercel.app/api/notifications", { withCredentials: true });
 
 				const data = res.data;
 
@@ -34,7 +34,7 @@ const NotificationPage = () => {
 	const { mutate: deleteNotifications, isPending } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await axios.delete("http://localhost:5000/api/notifications", { withCredentials: true });
+				const res = await axios.delete("https://twittercloneserver.vercel.app/api/notifications", { withCredentials: true });
 
 				const data = res.data;
 

@@ -16,7 +16,7 @@ const CreatePost = () => {
 	const { mutate: createPost, isPending, isError } = useMutation({
 		mutationFn: async ({ text, img }) => {
 			try {
-				const res = await axios.post("http://localhost:5000/api/post/create", { text, img }, { withCredentials: true })
+				const res = await axios.post("https://twittercloneserver.vercel.app/api/post/create", { text, img }, { withCredentials: true })
                 
 				const data = res.data;
 				

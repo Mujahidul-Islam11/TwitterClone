@@ -21,7 +21,7 @@ const Post = ({ post, refetch }) => {
 	const { mutate: deletePost, isPending } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await axios.delete(`http://localhost:5000/api/post/${post._id}`, {
+				const res = await axios.delete(`https://twittercloneserver.vercel.app/api/post/${post._id}`, {
 					withCredentials: true,
 				});
 
@@ -45,7 +45,7 @@ const Post = ({ post, refetch }) => {
 	const { mutate: likePost } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await axios.post(`http://localhost:5000/api/post/likeUnlike/${post._id}`, {}, {
+				const res = await axios.post(`https://twittercloneserver.vercel.app/api/post/likeUnlike/${post._id}`, {}, {
 					withCredentials: true,
 				});
 
@@ -69,7 +69,7 @@ const Post = ({ post, refetch }) => {
 	const { mutate: commentOnPost, isPending: isCommenting } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await axios.post(`http://localhost:5000/api/post/comment/${post._id}`, {text: comment}, {
+				const res = await axios.post(`https://twittercloneserver.vercel.app/api/post/comment/${post._id}`, {text: comment}, {
 					withCredentials: true,
 				});
 

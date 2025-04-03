@@ -34,7 +34,7 @@ const ProfilePage = () => {
 		queryKey: ["userProfile", username],
 		queryFn: async () => {
 			try {
-				const res = await axios.get(`http://localhost:5000/api/user/profile/${username}`, { withCredentials: true });
+				const res = await axios.get(`https://twittercloneserver.vercel.app/api/user/profile/${username}`, { withCredentials: true });
 				const data = res.data;
 
 				if (data.error) throw new Error(data.error || "Something went wrong");

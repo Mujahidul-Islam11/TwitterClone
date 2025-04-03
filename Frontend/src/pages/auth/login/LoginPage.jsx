@@ -18,7 +18,7 @@ const LoginPage = () => {
 	const { mutate, isError, isPending, error } = useMutation({
 		mutationFn: async (formData) => {
 			try {
-				const res = await axios.post("http://localhost:5000/api/auth/login", formData, {
+				const res = await axios.post("https://twittercloneserver.vercel.app/api/auth/login", formData, {
 					withCredentials: true,
 				  });
 				const data = res?.data;
