@@ -2,3 +2,7 @@
 @plugin "daisyui" {
     theme: "black";
 }
+
+body{
+    background-color: #000000;
+}
